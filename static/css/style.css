@@ -1,0 +1,10 @@
+/* Custom styles for quiz layout */
+body {
+    background-color: #f8f9fa;
+}
+.card {
+    border-radius: 8px;
+}
+.question-options label {
+    display: block;
+}

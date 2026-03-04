@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ exam.title }}{% endblock %}
+{% block content %}
+<h1>Exam: {{ exam.title }}</h1>
+<p><a href="{{ url_for('teacher_dashboard') }}" class="btn btn-secondary btn-sm">&laquo; Back</a></p>
+<h2>Edit exam details</h2>
+<form method="post" action="" class="row g-3 mb-4">
+  <div class="col-md-6">
+    <label class="form-label">Title</label>
+    <input name="title" value="{{ exam.title }}" class="form-control">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Time limit (min)</label>
+    <input name="time_limit" type="number" min="0" value="{{ exam.time_limit or 0 }}" class="form-control">
+  </div>
+  <div class="col-auto align-self-end">
+    <button type="submit" name="save_exam" class="btn btn-primary">Save</button>
+  </div>
+</form>
+<h2>Add question</h2>
+<form method="post" class="row g-3">
+  <div class="col-md-3">
+    <label class="form-label">Type</label>
+    <select name="type" class="form-select">
+      <option value="single">Single choice</option>
+      <option value="multiple">Multiple choice</option>
+      <option value="gap">Gap fill</option>
+      <option value="text">Short text</option>
+      <option value="longtext">Long text</option>
+    </select>
+  </div>
+  <div class="col-md-9">
+    <label class="form-label">Text</label>
+    <input name="text" class="form-control">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Options (comma-separated)</label>
+    <input name="options" class="form-control">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Answer</label>
+    <input name="answer" class="form-control">
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Add</button>
+  </div>
+</form>
+<h2 class="mt-4">Questions</h2>
+<ul class="list-group">
+  {% for q in exam.questions %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      {{ q.type }} - {{ q.text }}
+      {% if stats %}
+        {% for s in stats %}
+          {% if s.question.id == q.id %}
+            <span class="badge bg-info">{{ s.correct }}/{{ s.total }} correct</span>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

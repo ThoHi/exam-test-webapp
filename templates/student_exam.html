@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ exam.title }}{% endblock %}
+{% block content %}
+<h1>{{ exam.title }}</h1>
+{% if exam.time_limit %}
+<div id="timer" class="alert alert-info">Time remaining: <span id="time">--:--</span></div>
+<script>
+let seconds = {{ exam.time_limit }} * 60;
+let paused = false;
+function formatTime(s) {
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return m+":"+(r<10?"0":"")+r;
+}
+function tick() {
+  if (paused) return;
+  if (seconds <= 0) {
+    document.getElementById('timer').innerText = 'Time is up!';
+    document.querySelector('form').submit();
+    return;
+  }
+  document.getElementById('time').innerText = formatTime(seconds);
+  seconds--;
+}
+window.addEventListener('blur', () => { paused = true; });
+window.addEventListener('focus', () => { paused = false; });
+setInterval(tick, 1000);
+</script>
+{% endif %}
+<form method="post">
+    {% for q in exam.questions %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <p class="card-text"><strong>{{ loop.index }}.</strong> {{ q.text }}</p>
+          <div class="question-options">
+          {% if q.type == 'single' %}
+            {% for opt in q.options %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="q{{ q.id }}" value="{{ opt }}" id="q{{ q.id }}_{{ loop.index }}">
+                <label class="form-check-label" for="q{{ q.id }}_{{ loop.index }}">{{ opt }}</label>
+              </div>
+            {% endfor %}
+          {% elif q.type == 'multiple' %}
+            {% for opt in q.options %}
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="q{{ q.id }}" value="{{ opt }}" id="q{{ q.id }}_{{ loop.index }}">
+                <label class="form-check-label" for="q{{ q.id }}_{{ loop.index }}">{{ opt }}</label>
+              </div>
+            {% endfor %}
+          {% elif q.type == 'gap' %}
+            <input class="form-control" type="text" name="q{{ q.id }}">
+          {% elif q.type == 'text' or q.type == 'longtext' %}
+            <textarea class="form-control" name="q{{ q.id }}" rows="4"></textarea>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+{% endblock %}

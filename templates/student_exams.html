@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Exams{% endblock %}
+{% block content %}
+<h1>Available Exams</h1>
+<ul class="list-group">
+  {% for e in exams %}
+    <li class="list-group-item"><a href="{{ url_for('student_take_exam', exam_id=e.id) }}">{{ e.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

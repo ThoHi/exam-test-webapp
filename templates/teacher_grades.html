@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Grades - {{ exam.title }}{% endblock %}
+{% block content %}
+<h1>Grades for {{ exam.title }}</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Student</th>
+      <th>Score</th>
+      <th>Started</th>
+      <th>Ended</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for g in grades %}
+      <tr>
+        <td>{{ g.student.username if g.student else '?' }}</td>
+        <td>{{ g.score }}</td>
+        <td>{{ g.start_time }}</td>
+        <td>{{ g.end_time }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a class="btn btn-secondary" href="{{ url_for('export_grades', exam_id=exam.id) }}">Download CSV</a>
+<a class="btn btn-outline-secondary ms-2" href="{{ url_for('public_grades_csv', exam_id=exam.id) }}">Public Link</a>
+{% endblock %}

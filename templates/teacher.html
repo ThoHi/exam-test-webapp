@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+{% block content %}
+<h1>Teacher Dashboard</h1>
+<h2>Create exam</h2>
+<form method="post" class="row g-3 mb-4">
+  <div class="col-md-5">
+    <input name="title" class="form-control" placeholder="Exam title">
+  </div>
+  <div class="col-md-3">
+    <input name="time_limit" type="number" min="0" class="form-control" placeholder="Time limit (min)">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary">Create</button>
+  </div>
+</form>
+<h2>Exam summary</h2>
+<table class="table">
+  <thead>
+    <tr><th>Exam</th><th>Attempts</th><th>Average score</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    {% for s in summaries %}
+      <tr>
+        <td>{{ s.exam.title }}</td>
+        <td>{{ s.count }}</td>
+        <td>{% if s.avg is not none %}{{ '%.2f'|format(s.avg) }}{% else %}-{% endif %}</td>
+        <td>
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('teacher_edit_exam', exam_id=s.exam.id) }}">Edit</a>
+          <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('view_grades', exam_id=s.exam.id) }}">Grades</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<h2>Create exam</h2>
+<form method="post" class="row g-3 mb-4">
+  <div class="col-md-5">
+    <input name="title" class="form-control" placeholder="Exam title">
+  </div>
+  <div class="col-md-3">
+    <input name="time_limit" type="number" min="0" class="form-control" placeholder="Time limit (min)">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary">Create</button>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ exam.title }}{% endblock %}
+{% block content %}
+<h1>{{ exam.title }}</h1>
+<form action="{{ url_for('submit') }}" method="post">
+    {% for q in exam.questions %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <p class="card-text"><strong>{{ loop.index }}.</strong> {{ q.text }}</p>
+          {% if q.type == 'single' %}
+            {% for opt in q.options %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="q{{ q.id }}" value="{{ opt }}" id="opt{{ q.id }}_{{ loop.index }}">
+                <label class="form-check-label" for="opt{{ q.id }}_{{ loop.index }}">{{ opt }}</label>
+              </div>
+            {% endfor %}
+          {% elif q.type == 'multiple' %}
+            {% for opt in q.options %}
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="q{{ q.id }}" value="{{ opt }}" id="opt{{ q.id }}_{{ loop.index }}">
+                <label class="form-check-label" for="opt{{ q.id }}_{{ loop.index }}">{{ opt }}</label>
+              </div>
+            {% endfor %}
+          {% elif q.type == 'gap' %}
+            <input class="form-control" type="text" name="q{{ q.id }}">
+          {% elif q.type == 'text' or q.type == 'longtext' %}
+            <textarea class="form-control" name="q{{ q.id }}" rows="4"></textarea>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+{% endblock %}
